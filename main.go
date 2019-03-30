@@ -13,7 +13,6 @@ import (
 	"os/signal"
 
 	"github.com/3d0c/gmf"
-	"github.com/comail/colog"
 	"golang.org/x/crypto/ssh/terminal"
 	"golang.org/x/image/draw"
 )
@@ -205,7 +204,6 @@ func encode(cc *gmf.CodecCtx, frames []*gmf.Frame, drain int) {
 }
 
 func main() {
-	colog.Register()
 	flag.Parse()
 	if flag.NArg() != 1 {
 		log.Println("error: no src")

@@ -11,14 +11,6 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:3a60921f3c99de45d26b372450e666196a123def1edc2fb543c33db4a93813a7"
-  name = "github.com/comail/colog"
-  packages = ["."]
-  pruneopts = "UT"
-  revision = "fba8e7b1f46c3607f09760ce3880066e7ff57c5a"
-
-[[projects]]
-  branch = "master"
   digest = "1:bbe51412d9915d64ffaa96b51d409e070665efc5194fcf145c4a27d4133107a4"
   name = "golang.org/x/crypto"
   packages = ["ssh/terminal"]
@@ -52,7 +44,6 @@
   analyzer-version = 1
   input-imports = [
     "github.com/3d0c/gmf",
-    "github.com/comail/colog",
     "golang.org/x/crypto/ssh/terminal",
     "golang.org/x/image/draw",
   ]
