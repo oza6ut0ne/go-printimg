@@ -12,56 +12,9 @@ import (
 	"os/signal"
 
 	"github.com/3d0c/gmf"
-	"golang.org/x/crypto/ssh/terminal"
-	"golang.org/x/image/draw"
 )
 
 var isKilled = false
-
-func resizeRGBA(img *image.RGBA) *image.RGBA {
-	fd := int(os.Stdin.Fd())
-	termW, termH, err := terminal.GetSize(fd)
-	if err != nil {
-		log.Panic("error:", err)
-	}
-
-	termH -= 1
-
-	bounds := (*img).Bounds()
-	imgW := bounds.Max.X
-	imgH := bounds.Max.Y
-
-	h := termH
-	w := imgW * termH / imgH
-
-	if newW := termW / 2; w > newW {
-		h = h * newW / w
-		w = newW
-	}
-
-	resizedImg := image.NewRGBA(image.Rect(0, 0, w, h))
-	draw.NearestNeighbor.Scale(resizedImg, resizedImg.Bounds(), img, bounds, draw.Over, nil)
-	return resizedImg
-}
-
-func resizeImg(img *image.Image) *image.RGBA {
-	rgba := image.NewRGBA((*img).Bounds())
-	draw.Draw(rgba, rgba.Rect, *img, image.Pt(0, 0), draw.Src)
-	return resizeRGBA(rgba)
-}
-
-func printImg(img *image.RGBA) {
-	rect := img.Rect
-	for y := rect.Min.Y; y < rect.Max.Y; y++ {
-		for x := rect.Min.X; x < rect.Max.X; x++ {
-			r, g, b, _ := img.At(x, y).RGBA()
-			r, g, b = r>>8, g>>8, b>>8
-			fmt.Printf("\x1b[48;2;%d;%d;%dm  ", r, g, b)
-		}
-		fmt.Println()
-	}
-	fmt.Print("\x1b[0m")
-}
 
 func printVideo(srcPath string) {
 	var swsctx *gmf.SwsCtx
@@ -191,9 +144,9 @@ func encode(cc *gmf.CodecCtx, frames []*gmf.Frame, drain int) {
 		img.Stride = 4 * width
 		img.Rect = image.Rect(0, 0, width, height)
 
-		resizedImg := resizeRGBA(img)
+		resizedImg := ResizeRGBA(img)
 		fmt.Print("\x1b[1;1H")
-		printImg(resizedImg)
+		PrintImg(resizedImg)
 
 		p.Free()
 		if isKilled {
@@ -218,8 +171,8 @@ func main() {
 
 	img, _, err := image.Decode(src)
 	if err == nil {
-		resizedImg := resizeImg(&img)
-		printImg(resizedImg)
+		resizedImg := ResizeImg(&img)
+		PrintImg(resizedImg)
 		return
 	}
 
