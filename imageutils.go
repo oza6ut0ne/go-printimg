@@ -6,18 +6,22 @@ import (
 	_ "image/gif"
 	_ "image/jpeg"
 	_ "image/png"
-	"log"
 	"os"
 
 	"golang.org/x/crypto/ssh/terminal"
 	"golang.org/x/image/draw"
 )
 
+const (
+	DEFAULT_TERM_W int = 80
+	DEFAULT_TERM_H int = 24
+)
+
 func ResizeRGBA(img *image.RGBA) *image.RGBA {
 	fd := int(os.Stdin.Fd())
 	termW, termH, err := terminal.GetSize(fd)
 	if err != nil {
-		log.Panic("error:", err)
+		termW, termH = DEFAULT_TERM_W, DEFAULT_TERM_H
 	}
 
 	termH -= 1
